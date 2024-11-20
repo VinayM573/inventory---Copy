@@ -1,0 +1,91 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    .background-image {
+      background-image: url('/static/inventory/images/cover.png'); /* Adjust the path as needed */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+  }  
+</style>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>BatX </title>
+  <link rel="stylesheet" href="{% static 'inventory/css/vertical-layout-light/style.css'%}">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="{% static 'inventory/images/logo4.png'%}" />
+</head> 
+<body class="background-image">
+  <div class="container-scroller">
+      <div class="d-flex align-items-center auth px-0" style="margin-top:5%;">
+        <div class="row w-100 mx-auto">
+          <div class="col-lg-4 mx-auto">
+            <div class="auth-form-light text-left py-5 px-4 px-sm-5">
+              <div class="brand-logo">
+                <img src="{% static 'inventory/images/logo4.png'%}" alt="logo">
+              </div>
+              <h4>Password reset link sent successfully to:</h4>
+              <h6 class="fw-light">  {{ input_value }},</h6><br>
+                <div class="my-2 d-flex justify-content-between align-items-center">    
+                  <p>Return to <a href="{%url 'login'%}" class="auth-link text-black">Login</a></p>
+                </div>          
+              </div>
+          </div>
+        </div>
+      </div>
+      <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</body>
+<script>
+  // Add a timer to close the success message after 10 seconds
+  document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+          var successMessage = document.getElementById('successMessage');
+          if (successMessage) {
+              var alert = successMessage.querySelector('.alert');
+              if (alert) {
+                  alert.classList.remove('show');
+              }
+          }
+      }, 3000); // 10 seconds in milliseconds
+  });
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} 
+<div id="successMessage">
+    {% if messages %}
+      <div class="alert alert-success d-flex justify-content-between align-items-center alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+          <span>{{ message }}</span>
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endif %}
+  </div>
+  <a href={%url 'login'%}><button type="submit" >Login</button></a> {% endcomment %}

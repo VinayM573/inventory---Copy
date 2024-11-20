@@ -1,0 +1,81 @@
+{% extends 'inventory/base.html' %}
+{% block title %}{{ title }} {% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="main-panel">
+    <div class="container my-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="home-tab">
+                            <div class="d-flex align-items-center justify-content-between border-bottom">
+                                <div class="col-auto">
+                                    <label><a href="#" class="btn btn-success">ConverToPo</a></label>
+                                    <label><a href="{% url 'orders' %}" class="btn btn-primary">Save</a></label>
+                                    <label><a href="{% url 'orders' %}" class="btn btn-secondary">Back</a></label>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="btn-wrapper d-flex justify-content-end"> <!-- Use justify-content-end to align buttons to the right -->
+                                        <a href="#" class="btn btn-outline-dark align-items-center"><i class="icon-share"></i> Share</a>
+                                        <a href="#" class="btn btn-outline-dark"><i class="icon-printer"></i> Print</a>
+                                        <a href="#" class="btn btn-primary text-white me-0"><i class="icon-download"></i> Export</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <div style="margin-top: 5%; text-align: right;">
+                            <img src="{% static 'inventory/images/BatXLogo.png' %}" alt="Logo" style="height: 10%;width: 10%;">
+                        </div>                        
+                        <br>
+                        <label>RFQ ID</label>
+                        {{ rfqid }}
+                    <label>Quantity</label>
+                        {{ quantity }}
+                    <label>Price</label>
+                        {{ price }}
+                    <labale>Total</labale>
+                        {{ total_price }}                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+{% comment %} {% extends 'inventory/base.html' %}
+{% block title %}{{ title }} {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="main-panel">
+    <div class="container my-2">    
+        <div class="row align-items-start">
+            <div class="col-12">
+                <div class="card">
+                    <div>
+                        <div class="btn-wrapper">
+                          <a href="#" class="btn btn-otline-dark align-items-center"><i class="icon-share"></i> Share</a>
+                          <a href="#" class="btn btn-otline-dark"><i class="icon-printer"></i> Print</a>
+                          <a href="#" class="btn btn-primary text-white me-0"><i class="icon-download"></i> Export</a>
+                        </div>
+                      </div>
+        <label>RFQ ID</label>
+            {{ rfqid }}
+        <label>Quantity</label>
+        {{ quantity }}
+        <label>Price</label>
+        {{ price }}
+        <labale>Total</labale>
+        {{ total_price }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%} {% endcomment %}

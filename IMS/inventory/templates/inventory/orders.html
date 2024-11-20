@@ -1,0 +1,102 @@
+{% extends 'inventory/base.html' %}
+{% block title %}{{ title }} {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="main-panel">
+<div class="container my-2">
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; justify-content: space-between;">
+                    <a href="{% url 'crfq' %}" style="margin-right: 10px;">
+                        <button type="button" class="btn btn-primary">Create RFQ</button>
+                    </a>
+                    <form method="POST" action="{% url 'clear_data' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Clear All</button>
+                    </form>
+                </div>
+                <br>
+               <form method="post" action="{% url 'generate_pdf' %}" id="pdfForm" target="popup" onsubmit="window.open('', 'popup', 'width=600,height=600')" disableButtonAndUncheck()>
+                    {% csrf_token %} 
+                     <div class="text-end">
+                        <button type="submit" class="btn btn-success" id="generatePdfButton" disabled >Convert to PO</button>
+                    </div>
+            
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Select</th>
+                                    <th scope="col">RFQ Id</th>
+                                    {% comment %} <th scope="col">RFQ Order Date</th> {% endcomment %}
+                                    <th scope="col">Created by & Date</th>
+                                    <th scope="col">Client</th>
+                                    <th scope="col">Valid Till</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Unit</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">RFQ Order</th>
+                                    <th scope="col">Order Price</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Notes</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                    {% comment %} <th><button type="submit" class="btn btn-success" id="generatePdfButton" disabled >Convert to PO</button></th> {% endcomment %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for crfq in crfqs %}
+                                    <tr>
+                                        <td><input type="checkbox" class="select-checkbox" name="selected_rows" value="{{ crfq.id }}"></td>
+                                        <td>{{ crfq.rfqid }}</td>
+                                        <td>{{ crfq.created_by.name }} & {{ crfq.date }}</td>
+                                        <td>{{ crfq.client }}</td>
+                                        <td>{{ crfq.valid }}</td>
+                                        <td>{{ crfq.order_quantity }}</td>
+                                        <td>{{ crfq.uom}}</td>
+                                        <td>{{ crfq.product }}</td>
+                                        <td>{{ crfq.desc }}</td>                           
+                                        <td>{{ crfq.price}}</td>
+                                        <td>{{ crfq.total_price }}</td>
+                                        <td>{{ crfq.notes }}</td>
+                                        <td>{{ crfq.status }}</td>  
+                                        <td>
+                                            <div class="btn-group">
+                                              <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Action <span class="visually-hidden">Toggle Dropdown</span>
+                                              </button>
+                                              <ul class="dropdown-menu">
+                                                <li><a class="btn btn-success dropdown-item"  href="#">Update</a></li>
+                                                  <li><form method="post" action="#">
+                                                    {% csrf_token %}
+                                                      <input type="hidden" name="id" value="">
+                                                        <button type="submit" class="btn btn-danger dropdown-item" onclick="return confirmDelete()">Delete</button>
+                                                      </form>
+                                                  </li>
+                                              </ul>
+                                            </div>
+                                        </td> 
+                                    </tr>
+                                {% endfor %}                            
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+     document.addEventListener("DOMContentLoaded", function () {
+      const selectCheckboxes = document.querySelectorAll(".select-checkbox");
+      const generatePdfButton = document.getElementById("generatePdfButton");
+      const pdfForm = document.getElementById("pdfForm");
+      selectCheckboxes.forEach(function (checkbox) {
+      checkbox.addEventListener("change", function () {
+      const checkedCount = document.querySelectorAll(".select-checkbox:checked").length;
+      generatePdfButton.disabled = checkedCount === 0;
+        });
+      });
+    }); 
+</script>
+{% endblock %}

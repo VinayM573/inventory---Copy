@@ -1,0 +1,207 @@
+{% extends 'inventory/base.html' %}
+{% block title %}{{ title }} {% endblock %}
+{% block content %}
+{%load static%}
+{% if user.is_authenticated and user.is_staff and user.is_superuser %}
+<div class="main-panel">
+    <div class="container my-2">
+        <div class="row align-items-start">
+            <div class="col-md-12"> <!-- Change col-md-16 to col-md-12 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="text-center">Statistics</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card text-center p-3">
+                                    <h4>Registered Users</h4>
+                                    <h3><a href="{% url 'users' %}"><span class="badge bg-primary rounded-pill">{{ count_users }}</span></a></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-center p-3">
+                                    <h4>Registered Client</h4>
+                                    <h3><a href="{% url 'clients' %}"><span class="badge bg-primary rounded-pill">{{ count_client }}</span></a></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card text-center p-3">
+                                    <h4>All Item <i class="fa-thin fa-users"></i></h4>
+                                    <h3><a href="{% url 'product' %}"><span class="badge bg-primary rounded-pill">{{ count_products }}</span></a></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4"><br>
+                                <div class="card text-center p-3">
+                                    <h4>Total Battery Recycled</h4>
+                                    <h3><a href="#"><span class="badge bg-primary rounded-pill">{{ count_orders }}</span></a></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4"><br>
+                                <div class="card text-center p-3">
+                                    <h4>Total EPR Credits Issued</h4>
+                                    <h3><a href="#"><h3><span class="badge bg-primary rounded-pill">{{ count_orders }}</span></a></h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4"><br>
+                                <div class="card text-center p-3">
+                                    <h4>Master Report</h4>
+                                    <h3><a href="#"><span class="badge bg-primary rounded-pill">{{ count_orders }}</span></a></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-2">
+        <div class="row align-items-start">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="text-center">Data Overview</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="card-title text-center">Users</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">User Type</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for user in users %}
+                                                    <tr>
+                                                        <td>{{ user.name }}</td>
+                                                        <td>{{ user.user_Type }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <a class="nav-link text-primary active text-center mt-3" aria-current="page" href="{% url 'users' %}">View All Users</a>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="card-title text-center">Client</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th scope="col">Client Name</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for client in client_adm %}
+                                                <tr>
+                                                    <td>{{ client.client_Name }}</td>
+                                                    <td>{{ client.status }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        </div>
+                                        <a class="nav-link text-primary active text-center" aria-current="page" href="{% url 'clients' %}">View All Clients</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h2 class="card-title text-center">Item List</h2>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th scope="col">Product</th>
+                                                    <th scope="col">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for product in products %}
+                                                <tr>
+                                                    <td>{{ product.product }}</td>
+                                                    <td>{{ product.price }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        </div>
+                                        <a class="nav-link text-primary active text-center" aria-current="page" href="{% url 'product' %}">View All Items</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="main-panel">
+    <div class="container my-2">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-center">Make an Order</h4>
+                    </div>
+                    <div class="card-body">
+                        <a class="btn btn-info" href="{% url 'crfq' %}">Create Order</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="text-center">Here is a list of your Orders</h4>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Ordered Product</th>
+                            <th scope="col">Created by</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Order Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for crfqs in crfqs %}
+                            {% if crfq.created_by.name == user.name %}
+                                <tr>
+                                  <td>{{ crfq.product }}</td>
+                                  <td>{{ crfq.created_by.name }}</td>
+                                  <td>{{ crfq.order_quantity }}</td>
+                                  <td>{{ crfq.date }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

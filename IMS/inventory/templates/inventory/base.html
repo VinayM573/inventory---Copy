@@ -1,0 +1,525 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>BatX </title>
+  <style>
+    .modal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        max-width: 50%; /* Set the maximum width */
+        height: 50%%; /* Allow the height to adjust proportionally */
+    }
+   
+    .close1 {
+        font-size: 100px; /* Increase the font size */
+        cursor: pointer; /* Change cursor to pointer */
+        position: absolute; /* Position close button absolutely */
+        top: 0; /* Align close button to top of modal image */
+        right: 0; /* Align close button to right of modal image */
+        padding: 10px; /* Add padding to the close button */
+    }
+</style>
+
+
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="{% static 'inventory/vendors/feather/feather.css'%}">
+  <link rel="stylesheet" href="{% static 'inventory/vendors/mdi/css/materialdesignicons.min.css'%}">
+  <link rel="stylesheet" href="{% static 'inventory/vendors/ti-icons/css/themify-icons.css'%}">
+  <link rel="stylesheet" href="{% static 'inventory/vendors/typicons/typicons.css'%}">
+  <link rel="stylesheet" href="{% static 'inventory/vendors/simple-line-icons/css/simple-line-icons.css'%}">
+  <link rel="stylesheet" href="{% static 'inventory/vendors/css/vendor.bundle.base.css'%}">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="{% static 'inventory/vendors/datatables.net-bs4/dataTables.bootstrap4.css'%}">
+  <link rel="stylesheet" href="{% static 'inventory/js/select.dataTables.min.css'%}">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static 'inventory/css/vertical-layout-light/style.css'%}">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="{% static 'inventory/images/logo4.png'%}" />
+</head>
+<body>
+  {% if user.is_authenticated and user.is_staff and user.is_superuser %}
+  <div class="container-scroller">
+      <!-- Navbar -->
+      <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+          <!-- Navbar Brand -->
+          <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+              <div class="me-3">
+                  <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+                      <span class="icon-menu"></span>
+                  </button>
+              </div>
+              <div>
+                  <a class="navbar-brand brand-logo" href="{% url 'dash' %}">
+                      <img src="{%static 'inventory/images/logo4.png'%}" alt="logo" />
+                  </a>
+                  <a class="navbar-brand brand-logo-mini" href="{% url 'dash' %}">
+                    <img src="{% static 'inventory/images/logo4.png' %}" alt="logo" style="border-radius: 50%;" />
+                  </a>
+              </div>
+          </div>
+          <!-- Navbar Menu -->
+          <div class="navbar-menu-wrapper d-flex align-items-top">
+              <!-- Left Section -->
+              <ul class="navbar-nav">
+                  <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                      <h1 class="welcome-text">Hello, <span class="text-black fw-bold">{{user.name}}</span></h1>
+                  </li>
+              </ul>
+              <!-- Right Section -->
+              <ul class="navbar-nav ms-auto">
+                  <!-- Dropdown Menu -->
+                  <li class="nav-item dropdown">
+                      <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
+                          <!-- Dropdown Items -->
+                          <a class="dropdown-item preview-item py-3">
+                              <div class="preview-thumbnail">
+                                  <i class="mdi mdi-airballoon m-auto text-primary"></i>
+                              </div>
+                          </a>
+                      </div>
+                  </li>
+                  <!-- User Dropdown -->
+                  <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+                      <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if user.user_pic %}
+                        <img class="img-xs rounded-circle" src="{{ user.user_pic.url }}" alt="logo" width="100" height="100">
+                    {% else %}
+                        <!-- Default image path -->
+                        <img class="img-xs rounded-circle" src="{%static 'inventory/images/faces/face8.jpg'%}"  alt="Default image">
+                    {% endif %}
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                          <!-- User Profile -->
+                          <div class="dropdown-header text-center">
+                            {% if user.user_pic %}
+                            <img class="img-xs rounded-circle" src="{{ user.user_pic.url }}" alt="logo" width="100" height="100">
+                        {% else %}
+                            <!-- Default image path -->
+                            <img class="img-xs rounded-circle" src="{%static 'inventory/images/faces/face8.jpg'%}"  alt="Default image">
+                        {% endif %}
+                              <p class="mb-1 mt-3 font-weight-semibold">{{ user.name }}</p>
+                              <p class="fw-light text-muted mb-0">{{ user.email }}</p>
+                          </div>
+                          <!-- Dropdown Items -->
+                          <a class="dropdown-item" href="{% url 'user' %}"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile </a>
+                          <a class="dropdown-item" href="{%url 'change_password' %}"><i class="dropdown-item-icon mdi mdi-account-key text-primary me-2"></i> Change Password</a>
+                          {% comment %} <a class="dropdown-item" href="{% url 'logout' %}"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a> {% endcomment %}
+                          <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button class="dropdown-item" type="submit"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Logout</button>
+                        </form>
+                      </div>
+                  </li>
+              </ul>
+              <!-- Navbar Toggle Button (Mobile) -->
+              <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+                  <span class="mdi mdi-menu"></span>
+              </button>
+          </div>
+      </nav>
+      <!-- Sidebar and Content -->
+      <div class="container-fluid page-body-wrapper">
+          <!-- Settings Panel -->
+          <div class="theme-setting-wrapper">
+              <!-- Settings Trigger -->
+              <div id="settings-trigger"><i class="ti-settings"></i></div>
+              <!-- Theme Settings Panel -->
+              <div id="theme-settings" class="settings-panel">
+                  <!-- Close Button -->
+                  <i class="settings-close ti-close"></i>
+                  <!-- Sidebar Skins -->
+                  <p class="settings-heading">SIDEBAR SKINS</p>
+                  <!-- Sidebar Light Theme -->
+                  <div class="sidebar-bg-options selected" id="sidebar-light-theme">
+                      <div class="img-ss rounded-circle bg-light border me-3"></div>Light
+                  </div>
+                  <!-- Sidebar Dark Theme -->
+                  <div class="sidebar-bg-options" id="sidebar-dark-theme">
+                      <div class="img-ss rounded-circle bg-dark border me-3"></div>Dark
+                  </div>
+                  <!-- Header Skins -->
+                  <p class="settings-heading mt-2">HEADER SKINS</p>
+                  <!-- Color Tiles -->
+                  <div class="color-tiles mx-0 px-4">
+                      <div class="tiles success"></div>
+                      <div class="tiles warning"></div>
+                      <div class="tiles danger"></div>
+                      <div class="tiles info"></div>
+                      <div class="tiles dark"></div>
+                      <div class="tiles default"></div>
+                  </div>
+              </div>
+          </div>
+          <!-- Sidebar -->
+         
+          <nav class="sidebar sidebar-offcanvas" id="sidebar">
+              <ul class="nav">
+                  <!-- Nav Items -->
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'dash' %}">
+                          <i class="mdi mdi-grid-large menu-icon"></i>
+                          <span class="menu-title">Dashboard</span>
+                      </a>
+                  </li>
+                  <!-- More Nav Items -->
+                  <li class="nav-item nav-category">Item List</li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                      <i class="menu-icon mdi mdi-floor-plan"></i>
+                      <span class="menu-title">Item</span>
+                      <i class="menu-arrow"></i> 
+                    </a>
+                    <div class="collapse" id="ui-basic">
+                      <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link" href="{% url 'products' %}">Add Item</a></li>
+                      </ul>
+                      <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"> <a class="nav-link" href="{% url 'product' %}">View All Item</a></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="nav-item nav-category">Purchase</li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+              <i class="menu-icon mdi mdi-card-text-outline"></i>
+              <span class="menu-title">Purchase</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="form-elements">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="{% url 'orders' %}">Purchase</a></li>
+              </ul>
+            </div>
+          </li>
+          {% comment %} <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+              <i class="menu-icon mdi mdi mdi-file-pdf"></i>
+              <span class="menu-title">Convert to PO</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="charts">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="{% url 'orders' %}">Convert to PO</a></li>
+              </ul>
+            </div>
+          </li> {% endcomment %}
+          <li class="nav-item nav-category">Users</li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#user-details" aria-expanded="false" aria-controls="user-details">
+              <i class="menu-icon mdi mdi-account-circle-outline"></i>
+              <span class="menu-title">User Details</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="user-details">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'register' %}">User Registration</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'users' %}">View All User</a>
+                </li>
+                {% comment %} <li class="nav-item">
+                  <a class="nav-link" href="{% url 'users' %}">Update User</a>
+                </li> {% endcomment %}
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#client-details" aria-expanded="false" aria-controls="client-details">
+              <i class="menu-icon mdi mdi-account-circle-outline"></i>
+              <span class="menu-title">Client Details</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="client-details">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'client' %}">Client Registration</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'clients' %}">View All Client</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          </nav>
+          {% elif user.is_authenticated %}
+          <div class="container-scroller">
+            <!-- Navbar -->
+            <nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex align-items-top flex-row">
+                <!-- Navbar Brand -->
+                <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+                    <div class="me-3">
+                        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
+                            <span class="icon-menu"></span>
+                        </button>
+                    </div>
+                    <div>
+                        <a class="navbar-brand brand-logo" href="{% url 'dash' %}">
+                            <img src="{%static 'inventory/images/logo4.png'%}" alt="logo" />
+                        </a>
+                        <a class="navbar-brand brand-logo-mini" href="{% url 'dash' %}">
+                          <img src="{% static 'inventory/images/logo4.png' %}" alt="logo" style="border-radius: 50%;" />
+                        </a>
+                    </div>
+                </div>
+                <!-- Navbar Menu -->
+                <div class="navbar-menu-wrapper d-flex align-items-top">
+                    <!-- Left Section -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
+                            <h1 class="welcome-text">Hello, <span class="text-black fw-bold">{{user.name}}</span></h1>
+                        </li>
+                    </ul>
+                    <!-- Right Section -->
+                    <ul class="navbar-nav ms-auto">
+                        <!-- Dropdown Menu -->
+                        <li class="nav-item dropdown">
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
+                                <!-- Dropdown Items -->
+                                <a class="dropdown-item preview-item py-3">
+                                    <div class="preview-thumbnail">
+                                        <i class="mdi mdi-airballoon m-auto text-primary"></i>
+                                    </div>
+                                </a>
+                            </div>
+                        </li>
+                        <!-- User Dropdown -->
+                        <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+                            <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                              {% if user.user_pic %}
+                              <img class="img-xs rounded-circle" src="{{ user.user_pic.url }}" alt="logo" width="100" height="100">
+                          {% else %}
+                              <!-- Default image path -->
+                              <img class="img-xs rounded-circle" src="{%static 'inventory/images/faces/face8.jpg'%}"  alt="Default image">
+                          {% endif %}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                                <!-- User Profile -->
+                                <div class="dropdown-header text-center">
+                                  {% if user.user_pic %}
+                                  <img class="img-xs rounded-circle" src="{{ user.user_pic.url }}" alt="logo" width="100" height="100">
+                              {% else %}
+                                  <!-- Default image path -->
+                                  <img class="img-xs rounded-circle" src="{%static 'inventory/images/faces/face8.jpg'%}"  alt="Default image">
+                              {% endif %}
+                                    <p class="mb-1 mt-3 font-weight-semibold">{{ user.name }}</p>
+                                    <p class="fw-light text-muted mb-0">{{ user.email }}</p>
+                                </div>
+                                <!-- Dropdown Items -->
+                                <a class="dropdown-item" href="{% url 'user' %}"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile </a>
+                                <a class="dropdown-item" href="{%url 'change_password' %}"><i class="dropdown-item-icon mdi mdi-account-key text-primary me-2"></i> Change Password</a>
+                                <a class="dropdown-item" href="{% url 'login' %}"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- Navbar Toggle Button (Mobile) -->
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
+                        <span class="mdi mdi-menu"></span>
+                    </button>
+                </div>
+            </nav>
+            <!-- Sidebar and Content -->
+            <div class="container-fluid page-body-wrapper">
+                <!-- Settings Panel -->
+                <div class="theme-setting-wrapper">
+                    <!-- Settings Trigger -->
+                    <div id="settings-trigger"><i class="ti-settings"></i></div>
+                    <!-- Theme Settings Panel -->
+                    <div id="theme-settings" class="settings-panel">
+                        <!-- Close Button -->
+                        <i class="settings-close ti-close"></i>
+                        <!-- Sidebar Skins -->
+                        <p class="settings-heading">SIDEBAR SKINS</p>
+                        <!-- Sidebar Light Theme -->
+                        <div class="sidebar-bg-options selected" id="sidebar-light-theme">
+                            <div class="img-ss rounded-circle bg-light border me-3"></div>Light
+                        </div>
+                        <!-- Sidebar Dark Theme -->
+                        <div class="sidebar-bg-options" id="sidebar-dark-theme">
+                            <div class="img-ss rounded-circle bg-dark border me-3"></div>Dark
+                        </div>
+                        <!-- Header Skins -->
+                        <p class="settings-heading mt-2">HEADER SKINS</p>
+                        <!-- Color Tiles -->
+                        <div class="color-tiles mx-0 px-4">
+                            <div class="tiles success"></div>
+                            <div class="tiles warning"></div>
+                            <div class="tiles danger"></div>
+                            <div class="tiles info"></div>
+                            <div class="tiles dark"></div>
+                            <div class="tiles default"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Sidebar -->
+               
+                <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                    <ul class="nav">
+                        <!-- Nav Items -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dash' %}">
+                                <i class="mdi mdi-grid-large menu-icon"></i>
+                                <span class="menu-title">Dashboard</span>
+                            </a>
+                        </li>
+                        <!-- More Nav Items -->
+                        <li class="nav-item nav-category">Item List</li>
+                        <li class="nav-item">
+                          <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                            <i class="menu-icon mdi mdi-floor-plan"></i>
+                            <span class="menu-title">Item</span>
+                            <i class="menu-arrow"></i> 
+                          </a>
+                          <div class="collapse" id="ui-basic">
+                            <ul class="nav flex-column sub-menu">
+                              <li class="nav-item"> <a class="nav-link" href="{% url 'products' %}">Add Item</a></li>
+                            </ul>
+                            <ul class="nav flex-column sub-menu">
+                              <li class="nav-item"> <a class="nav-link" href="{% url 'product' %}">View All Item</a></li>
+                            </ul>
+                          </div>
+                        </li>
+                        <li class="nav-item nav-category">Purchase</li>
+                <li class="nav-item">
+                  <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+                    <i class="menu-icon mdi mdi-card-text-outline"></i>
+                    <span class="menu-title">Create RFQ</span>
+                    <i class="menu-arrow"></i>
+                  </a>
+                  <div class="collapse" id="form-elements">
+                    <ul class="nav flex-column sub-menu">
+                      <li class="nav-item"><a class="nav-link" href="{% url 'crfq' %}">Create RFQ</a></li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+                    <i class="menu-icon mdi mdi mdi-file-pdf"></i>
+                    <span class="menu-title">Convert to PO</span>
+                    <i class="menu-arrow"></i>
+                  </a>
+                  <div class="collapse" id="charts">
+                    <ul class="nav flex-column sub-menu">
+                      <li class="nav-item"> <a class="nav-link" href="{% url 'orders' %}">Convert to PO</a></li>
+                    </ul>
+                  </div>
+                </li>
+                </nav>
+          {% endif %}
+          {% block content%}
+          {% endblock %}
+      </div>
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="{% static 'inventory/vendors/js/vendor.bundle.base.js'%}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="{% static 'inventory/vendors/chart.js/Chart.min.js'%}"></script>
+  <script src="{% static 'inventory/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js'%}"></script>
+  <script src="{% static 'inventory/vendors/progressbar.js/progressbar.min.js'%}"></script>
+
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="{% static 'inventory/js/off-canvas.js'%}"></script>
+  <script src="{% static 'inventory/js/hoverable-collapse.js'%}"></script>
+  <script src="{% static 'inventory/js/template.js'%}"></script>
+  <script src="{% static 'inventory/js/settings.js'%}"></script>
+  <script src="{% static 'inventory/js/todolist.js'%}"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="{% static 'inventory/js/dashboard.js'%}"></script>
+  <script src="{% static 'inventory/js/Chart.roundedBarCharts.js'%}"></script>
+  <!-- End custom js for this page-->
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

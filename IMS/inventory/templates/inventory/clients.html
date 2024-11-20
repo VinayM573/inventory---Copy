@@ -1,0 +1,131 @@
+{% extends 'inventory/base.html' %}
+{% block title %}{{ title }} {% endblock %}
+{% block content %}
+<div class="main-panel">
+<div class="container my-2">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+            <div id="successMessage">
+              {% if messages %}
+                  <div class="alert alert-success d-flex justify-content-between align-items-center alert-dismissible fade show" role="alert">
+                      {% for message in messages %}
+                          <span>{{ message }}</span>
+                      {% endfor %}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+              {% endif %}
+          </div>
+            <div class="col">
+              <h4 class="card-title">Client Details</h4>
+              <hr>
+            </div>
+            <div class="col text-end">
+              <a href="{% url 'client' %}" class="btn btn-primary">New Client</a>
+            </div>
+          </div>
+        <div class="table-responsive" style="max-width: 970px;">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Client Name</th>
+                <th scope="col">Business Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Pan Card</th>
+                <th scope="col">Pan Image</th>
+                <th scope="col">Aadhar Card</th>
+                <th scope="col">Aadhar Image</th>
+                <th scope="col">Address</th>
+                <th scope="col">Assign Person</th>
+                <th scope="col">Industies Type</th>
+                <th scope="col">Account Type</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{client.client_Name}}</td>
+                    <td>{{client.business_Name}}</td>
+                    <td>{{client.email}}</td>
+                    <td>{{client.contact}}</td>
+                    <td>{{client.pan_Card}}</td>
+                    <td style="cursor: pointer;"><img src="{{ client.pan_Image.url }}" alt="Adhar Image" class="img-preview" onclick="openModal('{{ client.pan_Image.url }}')"></td>
+                    <td>{{client.aadhar_Card}}</td>
+                    <td style="cursor: pointer;"><img src="{{ client.adhar_Image.url }}" alt="Adhar Image" class="img-preview" onclick="openModal('{{ client.adhar_Image.url }}')"></td>
+                    <td>{{client.address}}</td>
+                    <td>{{client.assign_Person}}</td>
+                    <td>{{client.industies_Type}}</td>
+                    {% if client.account_Type == 'Regular' %}
+                    <td><label class="badge badge-success">{{ client.account_Type }}</label></td>
+                    {% elif client.account_Type == 'Contract' %}
+                    <td><label class="badge badge-warning">{{ client.account_Type }}</label></td>
+                    {% endif %}
+                    {% if client.status == 'Active' %}
+                    <td><label class="badge badge-success">{{ client.status }}</label></td>
+                    {% elif client.status == 'Onboarding' %}
+                    <td><label class="badge badge-warning">{{ client.status }}</label></td>
+                    {% elif client.status == 'Inactive' %}
+                    <td><label class="badge badge-danger">{{ client.status }}</label></td>
+                    {% endif %}
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="btn btn-success dropdown-item"  href="{% url 'update_client' cid=client.cid %}">Update</a></li>
+                                <li><form method="post" action="{% url 'delete_client' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cid" value="{{ client.cid }}">
+                                    <button type="submit" class="btn btn-danger dropdown-item" onclick="return confirmDelete()">Delete</button>
+                                </form></li>
+                            </ul>
+                        </div>
+                    </td> 
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+</div></div>
+<div id="myModal" class="modal">
+    <span class="close1" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+
+
+<script>
+    // Function to open the modal and set the modal image source
+    function openModal(imageSrc) {
+        document.getElementById('myModal').style.display = 'flex';
+        document.getElementById('modalImage').src = imageSrc;
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+
+    // Close the modal if the user clicks outside of the modal content
+    window.onclick = function(event) {
+        var modal = document.getElementById('myModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+
+    // Confirm deletion before submitting the form
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this item?');
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> 
+{% endblock %}

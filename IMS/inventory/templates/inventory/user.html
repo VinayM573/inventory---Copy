@@ -1,0 +1,92 @@
+{% extends 'inventory/base.html' %}
+{%load static%}
+{% block title %}{{ profile }} {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="main-panel">
+<div class="container my-2">
+    <div class="row align-items-start">
+        <div class="col-12 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="text-center">User's Profile</h1>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="card text-center p-3">
+                                <h4>Profile Information</h4>
+                                {% comment %} <a href="#" class="btn btn-primary btn-sm mb-3">Edit Profile</a> {% endcomment %}
+                                <hr>
+                                <table class="table bg-white table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Department</th>
+                                            <td>{{ user.department }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <td scope="col">{{ user.name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Email</th>
+                                            <td>{{ user.email }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Phone</th>
+                                            <td>{{ user.phone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Location</th>
+                                            <td>{{ user.location }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> 
+                        </div>
+                        <div class="col-md-3">
+                                <div class="card-body">
+                                    <div id="successMessage">
+                                        {% if messages %}
+                                            <div class="alert alert-success d-flex justify-content-between align-items-center alert-dismissible fade show" role="alert">
+                                                {% for message in messages %}
+                                                    <span>{{ message }}</span>
+                                                {% endfor %}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% if user.user_pic %}
+                                    <img style="border-radius: 50%; width: 150px; height: 150px;" class="img-thumbnail" src="{{user.user_pic.url}}" alt="profile picture">
+                                    {% else %}
+                                    <img style="border-radius: 50%; width: 150px; height: 150px;" class="img-thumbnail" src="{%static 'inventory/images/faces/face8.jpg'%}" alt="Default image">
+                                    {% endif %}
+                                        <form method="post" enctype="multipart/form-data">
+                                            {% csrf_token %} 
+                                            <br><label for="id_user_pic">Choose a new profile picture:</label><br>
+                                            <br><input type="file" name="user_pic"  onchange="previewImage(event)">
+                                            <button type="submit" class="btn btn-primary mt-2">Upload New Image</button>
+                                        </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% comment %} <footer class="footer">
+    &copy; 2024 BatX Energies, Inc.
+</footer> {% endcomment %}
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.querySelector('.card-body img');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+{% endblock %}
