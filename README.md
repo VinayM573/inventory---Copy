@@ -10,7 +10,7 @@ Normal Employee will only add inventory add view the inventory.
 
 Admin Employee will add employee and revome employee and also remove inventory and view all inventory.
 
-You can login with ID-it@gmail.com pass- 1234
+You can login with ID - it@gmail.com pass- 1234
 
 ![alt text](./image/image-1.png)
 
