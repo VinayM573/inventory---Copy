@@ -4,3 +4,4 @@ In This project you can track inventory.
 This project also the feature to manage employee who will see and work on which inventory part.
 Normal Employee will only add inventory add view the inventory.
 Admin Employee will add employee and revome employee and also remove inventory and view all inventory.
+![alt text](image.png)
